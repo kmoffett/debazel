@@ -1,0 +1,4 @@
+# The debazel template `debian/rules` does not know whether or not a given
+# package is architecture-independent or not, so it contains code for both
+# cases.
+debazel source: binary-arch-rules-but-pkg-is-arch-indep

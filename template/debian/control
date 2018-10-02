@@ -1,0 +1,11 @@
+Source: hello
+Section: devel
+Priority: optional
+Maintainer: Nobody <nobody@example.com>
+Build-Depends: bazel, debazel
+Standards-Version: 4.0.0
+Homepage: https://example.com/hello/
+
+Package: hello
+Architecture: all
+Description: An example hello-world package

@@ -1,0 +1,10 @@
+# Terminology is confusing here, but basically:
+#   DEB_BUILD_ARCH == Bazel "host"
+#   DEB_HOST_ARCH == Bazel "target"
+#   DEB_TARGET_ARCH == (Only for compilers) Platform the compiler will target
+build --platforms=@debazel_platforms//:deb_host_arch
+build --host_platform=@debazel_platforms//:deb_build_arch
+build --javabase=@debazel_tools//:default-java
+build --host_javabase=@debazel_tools//:default-java
+build --java_toolchain=@debazel_tools//:default-java-toolchain
+build --host_java_toolchain=@debazel_tools//:default-java-toolchain

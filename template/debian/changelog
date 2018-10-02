@@ -1,0 +1,5 @@
+hello (0.1) experimental; urgency=low
+
+  * Example `hello` package template
+
+ -- Nobody <nobody@example.com>  Sun, 23 Sep 2018 04:29:30 -0700

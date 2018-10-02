@@ -1,0 +1,78 @@
+load("@bazel_tools//tools/jdk:default_java_toolchain.bzl", "JDK8_JVM_OPTS")
+load("@bazel_tools//tools/jdk:default_java_toolchain.bzl", "default_java_toolchain")
+load("@debazel_platforms//:dpkg_architecture.bzl", "DEFAULTS")
+load("@debazel_rules//private:toolchain.bzl", "debazel_toolchain")
+
+package(default_visibility = ["@debazel_rules//:internal"])
+
+toolchain_type(
+    name = "debazel_toolchain_type",
+)
+
+debazel_toolchain(
+    name = "debazel_tools",
+    debazel_binary_package = "@debazel_rules//tools:binary_package",
+    deb_host_arch = DEFAULTS['DEB_HOST_ARCH'],
+    pseudo = "pseudo",
+    libpseudo = "lib/pseudo/libpseudo.so",
+)
+
+toolchain(
+    name = "debazel_toolchain",
+    toolchain_type = ":debazel_toolchain_type",
+    toolchain = ":debazel_tools",
+    exec_compatible_with = [
+        "@debazel_platforms//:abi_" + DEFAULTS["DEB_BUILD_ARCH_ABI"],
+        "@debazel_platforms//:arch_" + DEFAULTS["DEB_BUILD_ARCH"],
+        "@debazel_platforms//:bits_" + DEFAULTS["DEB_BUILD_ARCH_BITS"],
+        "@debazel_platforms//:endian_" + DEFAULTS["DEB_BUILD_ARCH_ENDIAN"],
+        "@debazel_platforms//:libc_" + DEFAULTS["DEB_BUILD_ARCH_LIBC"],
+        "@debazel_platforms//:os_" + DEFAULTS["DEB_BUILD_ARCH_OS"],
+    ],
+    target_compatible_with = [
+        "@debazel_platforms//:abi_" + DEFAULTS["DEB_HOST_ARCH_ABI"],
+        "@debazel_platforms//:arch_" + DEFAULTS["DEB_HOST_ARCH"],
+        "@debazel_platforms//:bits_" + DEFAULTS["DEB_HOST_ARCH_BITS"],
+        "@debazel_platforms//:endian_" + DEFAULTS["DEB_HOST_ARCH_ENDIAN"],
+        "@debazel_platforms//:libc_" + DEFAULTS["DEB_HOST_ARCH_LIBC"],
+        "@debazel_platforms//:os_" + DEFAULTS["DEB_HOST_ARCH_OS"],
+    ],
+)
+
+toolchain(
+    name = "cc_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+    # TODO(kmoffett): This will pick the wrong compiler for cross-builds
+    toolchain = "@bazel_tools//tools/cpp:cc-compiler-local",
+    exec_compatible_with = [
+        "@debazel_platforms//:abi_" + DEFAULTS["DEB_BUILD_ARCH_ABI"],
+        "@debazel_platforms//:arch_" + DEFAULTS["DEB_BUILD_ARCH"],
+        "@debazel_platforms//:bits_" + DEFAULTS["DEB_BUILD_ARCH_BITS"],
+        "@debazel_platforms//:endian_" + DEFAULTS["DEB_BUILD_ARCH_ENDIAN"],
+        "@debazel_platforms//:libc_" + DEFAULTS["DEB_BUILD_ARCH_LIBC"],
+        "@debazel_platforms//:os_" + DEFAULTS["DEB_BUILD_ARCH_OS"],
+    ],
+    target_compatible_with = [
+        "@debazel_platforms//:abi_" + DEFAULTS["DEB_HOST_ARCH_ABI"],
+        "@debazel_platforms//:arch_" + DEFAULTS["DEB_HOST_ARCH"],
+        "@debazel_platforms//:bits_" + DEFAULTS["DEB_HOST_ARCH_BITS"],
+        "@debazel_platforms//:endian_" + DEFAULTS["DEB_HOST_ARCH_ENDIAN"],
+        "@debazel_platforms//:libc_" + DEFAULTS["DEB_HOST_ARCH_LIBC"],
+        "@debazel_platforms//:os_" + DEFAULTS["DEB_HOST_ARCH_OS"],
+    ],
+)
+
+java_runtime(
+    name = "default-java",
+    java_home = "/usr/lib/jvm/default-java",
+)
+
+default_java_toolchain(
+    name = "default-java-toolchain",
+    bootclasspath = ["@bazel_tools//tools/jdk:platformclasspath8"],
+    jvm_opts = JDK8_JVM_OPTS,
+    source_version = "8",
+    target_version = "8",
+)
+
+# vim:set ft=bzl:

@@ -1,0 +1,78 @@
+load(":dpkg_architecture.bzl", "DEFAULTS", "ALL_ARCHS")
+
+package(default_visibility = ["//visibility:public"])
+
+constraint_setting(name = "deb_arch_mode")
+constraint_value(name = "deb_build_arch_mode", constraint_setting = ":deb_arch_mode")
+constraint_value(name = "deb_host_arch_mode", constraint_setting = ":deb_arch_mode")
+constraint_value(name = "deb_target_arch_mode", constraint_setting = ":deb_arch_mode")
+
+config_setting(name = "is_deb_build_arch", constraint_values = [":deb_build_arch_mode"])
+config_setting(name = "is_deb_host_arch", constraint_values = [":deb_host_arch_mode"])
+config_setting(name = "is_deb_target_arch", constraint_values = [":deb_target_arch_mode"])
+
+constraint_setting(name = "abi")
+constraint_value(name = "abi_base", constraint_setting = ":abi")
+
+constraint_setting(name = "arch")
+[
+    constraint_value(name = "arch_" + arch, constraint_setting = ":arch")
+    for arch in ALL_ARCHS
+]
+
+constraint_setting(name = "bits")
+constraint_value(name = "bits_32", constraint_setting = ":bits")
+constraint_value(name = "bits_64", constraint_setting = ":bits")
+
+constraint_setting(name = "endian")
+constraint_value(name = "endian_big", constraint_setting = ":endian")
+constraint_value(name = "endian_little", constraint_setting = ":endian")
+
+constraint_setting(name = "libc")
+constraint_value(name = "libc_gnu", constraint_setting = ":libc")
+
+constraint_setting(name = "os")
+constraint_value(name = "os_linux", constraint_setting = ":os")
+
+platform(
+    name = "deb_build_arch",
+    constraint_values = [
+        ":deb_build_arch_mode",
+        ":abi_" + DEFAULTS["DEB_BUILD_ARCH_ABI"],
+        ":arch_" + DEFAULTS["DEB_BUILD_ARCH"],
+        ":bits_" + DEFAULTS["DEB_BUILD_ARCH_BITS"],
+        ":endian_" + DEFAULTS["DEB_BUILD_ARCH_ENDIAN"],
+        ":libc_" + DEFAULTS["DEB_BUILD_ARCH_LIBC"],
+        ":os_" + DEFAULTS["DEB_BUILD_ARCH_OS"],
+    ],
+    host_platform = True,
+)
+
+platform(
+    name = "deb_host_arch",
+    constraint_values = [
+        ":deb_host_arch_mode",
+        ":abi_" + DEFAULTS["DEB_HOST_ARCH_ABI"],
+        ":arch_" + DEFAULTS["DEB_HOST_ARCH"],
+        ":bits_" + DEFAULTS["DEB_HOST_ARCH_BITS"],
+        ":endian_" + DEFAULTS["DEB_HOST_ARCH_ENDIAN"],
+        ":libc_" + DEFAULTS["DEB_HOST_ARCH_LIBC"],
+        ":os_" + DEFAULTS["DEB_HOST_ARCH_OS"],
+    ],
+    target_platform = True,
+)
+
+platform(
+    name = "deb_target_arch",
+    constraint_values = [
+        ":deb_target_arch_mode",
+        ":abi_" + DEFAULTS["DEB_TARGET_ARCH_ABI"],
+        ":arch_" + DEFAULTS["DEB_TARGET_ARCH"],
+        ":bits_" + DEFAULTS["DEB_TARGET_ARCH_BITS"],
+        ":endian_" + DEFAULTS["DEB_TARGET_ARCH_ENDIAN"],
+        ":libc_" + DEFAULTS["DEB_TARGET_ARCH_LIBC"],
+        ":os_" + DEFAULTS["DEB_TARGET_ARCH_OS"],
+    ],
+)
+
+# vim:set ft=bzl:

@@ -1,0 +1,5 @@
+# Bazel output tree symlinks
+/bazel-*
+
+# Debian packaging cruft
+/debian/files

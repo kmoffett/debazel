@@ -1,0 +1,21 @@
+Source: debazel
+Section: devel
+Priority: optional
+Maintainer: Kyle Moffett <kyle@moffetthome.net>
+Build-Depends: bazel, pseudo
+Standards-Version: 4.0.0
+Homepage: https://github.com/kmoffett/debazel/
+
+Package: debazel
+Architecture: all
+Depends: build-essential, pseudo
+Description: Skylark rules for building Debian packages with Bazel
+ Bazel is a massively scalable open-source build system developed by Google,
+ with its own extensible build language called "Starlark".  For more details
+ about Bazel itself, see https://bazel.build/.
+ .
+ This package provides a set of "Starlark" build rules for building fully
+ policy-compliant Debian packages quickly and efficiently with Bazel.
+ .
+ It is roughly analogous to `debhelper`, but enforcibly hermetic and extremely
+ fast to develop and iterate with.

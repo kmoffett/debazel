@@ -1,0 +1,1 @@
+debazel: package-contains-vcs-control-file usr/share/debazel/template/.gitignore

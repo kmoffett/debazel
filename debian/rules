@@ -1,0 +1,24 @@
+#! /usr/bin/make -f
+
+BAZEL = bazel
+_BAZEL_WITH_ARGS := $(BAZEL) --bazelrc=.bazelrc
+
+build build-arch build-indep: build%:
+	echo 'Nothing to do during "$@"'
+
+binary binary-arch binary-indep: binary%:
+	set -eu; \
+	$(_BAZEL_WITH_ARGS) build //debian; \
+	bindir="$$($(_BAZEL_WITH_ARGS) info bazel-bin)"; \
+	cat <"$${bindir}/debian/$@" >debian/files; \
+	for filename in $$(awk '{print $$1}' debian/files); do \
+	  rm -f "../$${filename}"; \
+	  cp "$${bindir}/debian/binary-packages/$${filename}" "../"; \
+	done; \
+
+# Bazel does automatic hermetically-correct builds; there is nothing to "clean"
+# except for the `debian/files` file containing a list of built *.deb files
+clean:
+	rm -f debian/files
+
+.PHONY: binary binary-arch binary-indep build build-arch build-indep clean
